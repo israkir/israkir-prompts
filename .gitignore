@@ -1,0 +1,40 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.Spotlight-V100
+.Trashes
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Linux
+*~
+
+# Editor / IDE
+.idea/
+*.swp
+*.swo
+*.swn
+.vscode/
+!.vscode/extensions.json
+
+# Backup / temp
+*.bak
+*.tmp
+*.orig
+
+# Secrets (if you add local config later)
+.env
+.env.*
+!.env.example
+
+# Python (CLI uses inline python3; ignore caches if scripts grow)
+__pycache__/
+*.py[cod]
+.Python
+.venv/
+venv/

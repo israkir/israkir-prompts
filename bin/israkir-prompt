@@ -1,0 +1,171 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+MANIFEST="${ROOT}/manifest.yaml"
+
+usage() {
+  cat <<'EOF'
+Usage: israkir-prompt <command> [args]
+
+Commands:
+  list                  List all prompt templates
+  show <id>             Print one prompt (body only, no frontmatter)
+  compose <id> [id...]  Print multiple prompts separated for agent use
+  path <id>             Print absolute path to a prompt file
+
+Examples:
+  israkir-prompt list
+  israkir-prompt show timestamp-data-source-audit
+  israkir-prompt compose timestamp-data-source-audit other-id
+  israkir-prompt path timestamp-data-source-audit | pbcopy
+
+In Cursor / Claude Code, reference a prompt file directly:
+  @/path/to/israkir-prompts/prompts/ux/timestamp-data-source-audit.md
+  Apply this prompt to the current project.
+EOF
+}
+
+require_manifest() {
+  if [[ ! -f "$MANIFEST" ]]; then
+    echo "error: manifest not found at $MANIFEST" >&2
+    exit 1
+  fi
+}
+
+resolve_path() {
+  local id="$1"
+  require_manifest
+  local path
+  path="$(python3 - "$MANIFEST" "$id" <<'PY'
+import sys
+from pathlib import Path
+
+manifest = Path(sys.argv[1]).read_text()
+target_id = sys.argv[2]
+current_id = None
+current_path = None
+
+for raw in manifest.splitlines():
+    line = raw.strip()
+    if line.startswith("- id:"):
+        current_id = line.split(":", 1)[1].strip()
+    elif line.startswith("path:") and current_id == target_id:
+        current_path = line.split(":", 1)[1].strip()
+        break
+
+if not current_path:
+    sys.exit(1)
+print((Path(sys.argv[1]).parent / current_path).resolve())
+PY
+)" || {
+    echo "error: unknown prompt id '$id'" >&2
+    echo "Run 'israkir-prompt list' to see available prompts." >&2
+    exit 1
+  }
+  echo "$path"
+}
+
+strip_frontmatter() {
+  python3 - "$1" <<'PY'
+import sys
+from pathlib import Path
+
+text = Path(sys.argv[1]).read_text()
+if text.startswith("---"):
+    parts = text.split("---", 2)
+    if len(parts) >= 3:
+        print(parts[2].lstrip("\n"), end="")
+        sys.exit(0)
+print(text, end="")
+PY
+}
+
+cmd_list() {
+  require_manifest
+  python3 - "$MANIFEST" <<'PY'
+import sys
+from pathlib import Path
+
+manifest = Path(sys.argv[1]).read_text()
+current = {}
+rows = []
+
+for raw in manifest.splitlines():
+    line = raw.strip()
+    if not line or line.startswith("#") or line.startswith("version:"):
+        continue
+    if line.startswith("- id:"):
+        if current.get("id"):
+            rows.append(current)
+        current = {"id": line.split(":", 1)[1].strip()}
+    elif line.startswith("title:"):
+        current["title"] = line.split(":", 1)[1].strip()
+    elif line.startswith("category:"):
+        current["category"] = line.split(":", 1)[1].strip()
+    elif line.startswith("tags:"):
+        current["tags"] = line.split(":", 1)[1].strip()
+
+if current.get("id"):
+    rows.append(current)
+
+if not rows:
+    sys.exit(0)
+
+id_w = max(len(r["id"]) for r in rows)
+cat_w = max(max(len(r.get("category", "")) for r in rows), len("CATEGORY"))
+
+print(f"{'ID'.ljust(id_w)}  {'CATEGORY'.ljust(cat_w)}  TITLE")
+print(f"{'-' * id_w}  {'-' * cat_w}  {'-' * 5}")
+
+for r in rows:
+    print(f"{r['id'].ljust(id_w)}  {r.get('category', '').ljust(cat_w)}  {r.get('title', '')}")
+PY
+}
+
+cmd_show() {
+  local id="${1:?prompt id required}"
+  local file
+  file="$(resolve_path "$id")"
+  if [[ ! -f "$file" ]]; then
+    echo "error: prompt file missing: $file" >&2
+    exit 1
+  fi
+  strip_frontmatter "$file"
+}
+
+cmd_compose() {
+  if [[ $# -lt 1 ]]; then
+    echo "error: compose requires at least one prompt id" >&2
+    exit 1
+  fi
+
+  local first=1
+  for id in "$@"; do
+    if [[ "$first" -eq 0 ]]; then
+      printf '\n\n---\n\n# Combined prompt: %s (continued)\n\n' "$id"
+    fi
+    first=0
+    cmd_show "$id"
+  done
+}
+
+main() {
+  local cmd="${1:-}"
+  shift || true
+
+  case "$cmd" in
+    list) cmd_list ;;
+    show) cmd_show "$@" ;;
+    compose) cmd_compose "$@" ;;
+    path) resolve_path "${1:?prompt id required}" ;;
+    -h|--help|help|"") usage ;;
+    *)
+      echo "error: unknown command '$cmd'" >&2
+      usage
+      exit 1
+      ;;
+  esac
+}
+
+main "$@"
