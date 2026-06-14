@@ -7,3 +7,9 @@ prompts:
     title: Timestamp & Data-Source UX Consistency Audit
     category: ux
     tags: [timestamp, provenance, audit, ux, consistency, data-source]
+
+  - id: restful-api-design-audit
+    path: prompts/api/restful-api-design-audit.md
+    title: RESTful API Design Audit & Implementation
+    category: api
+    tags: [rest, api, http, openapi, hypermedia, design, audit]

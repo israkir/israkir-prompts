@@ -78,7 +78,6 @@ israkir-prompt compose timestamp-data-source-audit other-id
 israkir-prompts/
 ├── manifest.yaml          # Catalog (ids, paths, metadata for tooling)
 ├── bin/israkir-prompt     # list | show | compose | path
-├── .cursor/commands/      # Cursor slash commands (e.g. /commit)
 └── prompts/
     └── <category>/
         └── <slug>.md      # One prompt per file, YAML frontmatter + body
@@ -136,6 +135,7 @@ version: 1.0.0
 | ID | Category | Title |
 |----|----------|-------|
 | `timestamp-data-source-audit` | ux | Timestamp & Data-Source UX Consistency Audit |
+| `restful-api-design-audit` | api | RESTful API Design Audit & Implementation |
 
 Run `./bin/israkir-prompt list` for the current catalog.
 
