@@ -3,7 +3,7 @@
 <h1>&#128221; israkir-prompts</h1>
 
 <p>
-  <strong>Reusable, production-ready prompt templates for coding agents</strong>
+  <strong>Prompt briefs I actually reuse — not one-off chat paste</strong>
 </p>
 
 <p>
@@ -18,43 +18,43 @@
 </p>
 
 <p>
-  <a href="#what-is-this">Overview</a>
+  <a href="#why-this-exists">Why</a>
+  &middot;
+  <a href="#prompt-catalog">Catalog</a>
+  &middot;
+  <a href="#installation">Install</a>
   &middot;
   <a href="#usage">Usage</a>
   &middot;
-  <a href="./CONTRIBUTING.md">Contributing</a>
+  <a href="#highlights">Highlights</a>
+  &middot;
+  <a href="#contributing">Contributing</a>
+  &middot;
+  <a href="#license">License</a>
 </p>
 
 </div>
 
 ---
 
-<a name="what-is-this"></a>
+<a name="why-this-exists"></a>
 
-### What is this?
+### Why this exists
 
-**israkir-prompts** is a catalog of standalone Markdown prompt templates for [Cursor](https://cursor.com), [Claude Code](https://claude.ai/code), Copilot, and other coding agents. Each file is a complete task brief an agent can execute without extra context.
-
-Prompts are **versioned**, **categorized**, and registered in `manifest.yaml` — discoverable via a small CLI (`bin/israkir-prompt`) or referenced directly by path in chat.
+I use coding agents daily — for now [Cursor](https://cursor.com) and [Claude Code](https://claude.ai/code), and whatever I am trying next. The same tasks repeat for most of my projects: foundational Makefile and deployment setup, REST API reviews and timestamp UX audits etc. These are my own preferences and conventions. If you find them useful, you are more than welcome to use them and introduce justified improvements with your own PRs to share with me (and everyone else).
 
 ---
 
-### &#10024; Key Features
-
-- **Standalone prompts** — One `.md` file per task; YAML frontmatter + full brief body; no framework lock-in.
-- **Stable IDs** — Kebab-case `id` in frontmatter and `manifest.yaml` for CLI, automation, and `@` references.
-- **Three-phase workflow** — Audit prompts follow **Discovery → Plan & implement → Verify** so agents inventory before changing code.
-- **CLI helpers** — `list`, `show`, `compose`, and `path` to print or pipe prompts without opening files manually.
-- **Agent-agnostic** — Works with Cursor `@` attachments, Claude Code file reads, clipboard paste, or project knowledge.
-- **Cursor `/commit`** — Built-in command (`.cursor/commands/commit.md`) for Conventional Commit proposals with approval-first staging.
-
----
+<a name="prompt-catalog"></a>
 
 ### &#127760; Prompt Catalog
+
+Listed in typical **project flow**: setup → API → UX polish.
 
 <table>
   <thead>
     <tr>
+      <th>Step</th>
       <th>Category</th>
       <th>ID</th>
       <th>Title</th>
@@ -64,25 +64,28 @@ Prompts are **versioned**, **categorized**, and registered in `manifest.yaml` �
   </thead>
   <tbody>
     <tr>
-      <td rowspan="1"><strong>UX</strong></td>
-      <td><code>timestamp-data-source-audit</code></td>
-      <td>&#128337; Timestamp &amp; Data-Source UX Consistency Audit</td>
-      <td><code>prompts/ux/timestamp-data-source-audit.md</code></td>
-      <td>~210</td>
+      <td>1</td>
+      <td><strong>Dev</strong></td>
+      <td><a href="./prompts/dev/new-project-setup-makefile.md"><code>new-project-setup-makefile</code></a></td>
+      <td><a href="./prompts/dev/new-project-setup-makefile.md">&#9881;&#65039; New Project Setup — Makefile Conventions + Production Integration</a></td>
+      <td><a href="./prompts/dev/new-project-setup-makefile.md"><code>prompts/dev/new-project-setup-makefile.md</code></a></td>
+      <td>~435</td>
     </tr>
     <tr>
-      <td rowspan="1"><strong>API</strong></td>
-      <td><code>restful-api-design-audit</code></td>
-      <td>&#128268; RESTful API Design Audit &amp; Implementation</td>
-      <td><code>prompts/api/restful-api-design-audit.md</code></td>
+      <td>2</td>
+      <td><strong>API</strong></td>
+      <td><a href="./prompts/api/restful-api-design-audit.md"><code>restful-api-design-audit</code></a></td>
+      <td><a href="./prompts/api/restful-api-design-audit.md">&#128268; RESTful API Design Audit &amp; Implementation</a></td>
+      <td><a href="./prompts/api/restful-api-design-audit.md"><code>prompts/api/restful-api-design-audit.md</code></a></td>
       <td>~385</td>
     </tr>
     <tr>
-      <td rowspan="1"><strong>Dev</strong></td>
-      <td><code>new-project-setup-makefile</code></td>
-      <td>&#9881;&#65039; New Project Setup — Makefile Conventions + Production Integration</td>
-      <td><code>prompts/dev/new-project-setup-makefile.md</code></td>
-      <td>~435</td>
+      <td>3</td>
+      <td><strong>UX</strong></td>
+      <td><a href="./prompts/ux/timestamp-data-source-audit.md"><code>timestamp-data-source-audit</code></a></td>
+      <td><a href="./prompts/ux/timestamp-data-source-audit.md">&#128337; Timestamp &amp; Data-Source UX Consistency Audit</a></td>
+      <td><a href="./prompts/ux/timestamp-data-source-audit.md"><code>prompts/ux/timestamp-data-source-audit.md</code></a></td>
+      <td>~210</td>
     </tr>
   </tbody>
 </table>
@@ -91,57 +94,7 @@ Run `./bin/israkir-prompt list` for the live catalog.
 
 ---
 
-### &#128260; Three-Phase Agent Workflow
-
-Audit-style prompts share a consistent execution model:
-
-```
-Phase A — Discovery (inventory first)
-  Map scope, find every relevant surface, document before editing
-                    |
-                    v
-Phase B — Plan & implement
-  Propose changes, get alignment, then implement in bounded steps
-                    |
-                    v
-Phase C — Verify
-  Check acceptance criteria, regressions, and documentation updates
-```
-
----
-
-### &#128193; Repository Structure
-
-```
-israkir-prompts/
-|
-+-- manifest.yaml                         # Catalog (ids, paths, metadata for tooling)
-+-- README.md
-+-- CONTRIBUTING.md
-+-- LICENSE
-+-- bin/
-|   +-- israkir-prompt                    # CLI: list | show | compose | path
-|
-+-- prompts/
-|   +-- ux/
-|   |   +-- timestamp-data-source-audit.md
-|   +-- api/
-|   |   +-- restful-api-design-audit.md
-|   +-- dev/
-|       +-- new-project-setup-makefile.md
-|
-+-- .cursor/
-    +-- commands/
-        +-- commit.md                     # /commit — Conventional Commit helper
-```
-
-| Path | Purpose |
-|------|---------|
-| `prompts/<category>/<slug>.md` | Prompt content agents consume |
-| `manifest.yaml` | Stable ids for CLI and automation |
-| `bin/israkir-prompt` | Print prompts without opening files manually |
-
----
+<a name="installation"></a>
 
 ### &#128640; Installation
 
@@ -175,11 +128,11 @@ israkir-prompt list
 ```bash
 # From this repo
 ./bin/israkir-prompt list
-./bin/israkir-prompt show timestamp-data-source-audit
+./bin/israkir-prompt show new-project-setup-makefile
 
 # Optional: add CLI to PATH (see Installation)
-israkir-prompt show timestamp-data-source-audit | pbcopy   # macOS
-israkir-prompt show timestamp-data-source-audit | xclip -selection clipboard   # Linux
+israkir-prompt show new-project-setup-makefile | pbcopy   # macOS
+israkir-prompt show new-project-setup-makefile | xclip -selection clipboard   # Linux
 ```
 
 **Cursor:** run **`/commit`** (`.cursor/commands/commit.md`) in this repo to propose a Conventional Commit before staging; approve explicitly before anything is recorded.
@@ -188,9 +141,9 @@ israkir-prompt show timestamp-data-source-audit | xclip -selection clipboard   #
 
 ```bash
 ./bin/israkir-prompt list
-./bin/israkir-prompt show timestamp-data-source-audit
-./bin/israkir-prompt path timestamp-data-source-audit
-./bin/israkir-prompt compose timestamp-data-source-audit restful-api-design-audit
+./bin/israkir-prompt show new-project-setup-makefile
+./bin/israkir-prompt path new-project-setup-makefile
+./bin/israkir-prompt compose new-project-setup-makefile restful-api-design-audit timestamp-data-source-audit
 ```
 
 | Command | Purpose |
@@ -203,9 +156,9 @@ israkir-prompt show timestamp-data-source-audit | xclip -selection clipboard   #
 **Clipboard piping:**
 
 ```bash
-israkir-prompt show timestamp-data-source-audit | pbcopy                        # macOS
-israkir-prompt show timestamp-data-source-audit | xclip -selection clipboard    # Linux
-israkir-prompt path timestamp-data-source-audit | pbcopy                          # copy file path
+israkir-prompt show new-project-setup-makefile | pbcopy                        # macOS
+israkir-prompt show new-project-setup-makefile | xclip -selection clipboard    # Linux
+israkir-prompt path new-project-setup-makefile | pbcopy                          # copy file path
 ```
 
 #### In Cursor
@@ -221,10 +174,11 @@ Apply this prompt to the current project. Work through Phase A first, then propo
 **Multiple prompts (Cursor):**
 
 ```text
-@prompts/ux/timestamp-data-source-audit.md
+@prompts/dev/new-project-setup-makefile.md
 @prompts/api/restful-api-design-audit.md
+@prompts/ux/timestamp-data-source-audit.md
 
-Apply both prompts to this codebase in order.
+Apply all three prompts to this codebase in project-flow order.
 ```
 
 #### In Claude Code
@@ -249,14 +203,15 @@ For timestamp/provenance UX audits, load `~/git/israkir-prompts/prompts/ux/times
 
 ```text
 Read these files from israkir-prompts and apply them to this repo in order:
-1. /path/to/israkir-prompts/prompts/ux/timestamp-data-source-audit.md
+1. /path/to/israkir-prompts/prompts/dev/new-project-setup-makefile.md
 2. /path/to/israkir-prompts/prompts/api/restful-api-design-audit.md
+3. /path/to/israkir-prompts/prompts/ux/timestamp-data-source-audit.md
 ```
 
 Or use the CLI:
 
 ```bash
-israkir-prompt compose timestamp-data-source-audit restful-api-design-audit
+israkir-prompt compose new-project-setup-makefile restful-api-design-audit timestamp-data-source-audit
 ```
 
 #### Claude.ai (Projects)
@@ -293,28 +248,30 @@ Ask before large refactors outside the stated scope.
 
 | Prompt | What happens |
 |--------|-------------|
-| `timestamp-data-source-audit` | Audits every user-visible timestamp; pairs time with data source; fixes timezone and freshness semantics |
-| `restful-api-design-audit` | Reviews HTTP APIs against REST maturity (Level 2–3); resources, verbs, hypermedia, OpenAPI |
 | `new-project-setup-makefile` | Scaffolds Makefile targets, local dev (host + container datastores), CI/registry production flow |
-| `israkir-prompt compose <id>...` | Concatenates multiple prompts for sequential agent execution |
+| `restful-api-design-audit` | Reviews HTTP APIs against REST maturity (Level 2–3); resources, verbs, hypermedia, OpenAPI |
+| `timestamp-data-source-audit` | Audits every user-visible timestamp; pairs time with data source; fixes timezone and freshness semantics |
+| `israkir-prompt compose <id>...` | Concatenates multiple prompts for sequential agent execution (use project-flow order) |
 
 ---
+
+<a name="highlights"></a>
 
 ### &#128300; Highlights by Prompt
 
 <details>
-<summary><strong>&#128337; Timestamp &amp; Data-Source UX Audit</strong></summary>
+<summary><strong>&#9881;&#65039; New Project Setup (Makefile)</strong> — step 1</summary>
 
-- Distinguishes **provider time**, **server/cache time**, **client receive time**, and **user activity time**
-- Covers UI labels: "Live", "Real-time", "Cached", "Updated", tooltips, and screen-reader text
-- Phase A inventory of every user-visible timestamp before any code change
-- Consistent pairing of **when** with **where the data came from**
-- User timezone respect and page-level provenance priority
+- Canonical targets: `be-*`, `fe-*`, `storage-*`, `worker-dev` across repos
+- **Local dev** — app on host with hot reload; only datastores in containers (`podman-compose`)
+- **Production** — CI builds images → registry (e.g. GHCR) → host pulls; no local builds on server
+- Single root `.env` from `.env.example`; deprecated aliases as thin forwards
+- Monorepo layout, CI wiring, and onboarding checklist for new apps
 
 </details>
 
 <details>
-<summary><strong>&#128268; RESTful API Design Audit</strong></summary>
+<summary><strong>&#128268; RESTful API Design Audit</strong> — step 2</summary>
 
 - **REST maturity model** — target Level 2 for internal APIs, Level 3 (hypermedia) for client-facing APIs
 - Resource-oriented URIs, correct HTTP verbs and status codes, stateless requests
@@ -325,17 +282,19 @@ Ask before large refactors outside the stated scope.
 </details>
 
 <details>
-<summary><strong>&#9881;&#65039; New Project Setup (Makefile)</strong></summary>
+<summary><strong>&#128337; Timestamp &amp; Data-Source UX Audit</strong> — step 3</summary>
 
-- Canonical targets: `be-*`, `fe-*`, `storage-*`, `worker-dev` across repos
-- **Local dev** — app on host with hot reload; only datastores in containers (`podman-compose`)
-- **Production** — CI builds images → registry (e.g. GHCR) → host pulls; no local builds on server
-- Single root `.env` from `.env.example`; deprecated aliases as thin forwards
-- Monorepo layout, CI wiring, and onboarding checklist for new apps
+- Distinguishes **provider time**, **server/cache time**, **client receive time**, and **user activity time**
+- Covers UI labels: "Live", "Real-time", "Cached", "Updated", tooltips, and screen-reader text
+- Phase A inventory of every user-visible timestamp before any code change
+- Consistent pairing of **when** with **where the data came from**
+- User timezone respect and page-level provenance priority
 
 </details>
 
 ---
+
+<a name="contributing"></a>
 
 ### &#129309; Contributing
 
@@ -351,6 +310,8 @@ Contributions are welcome! See [CONTRIBUTING.md](./CONTRIBUTING.md) for the full
 **Ideas:** new categories (security, refactoring, testing), framework-specific audit variants, CLI validators, more Cursor slash commands.
 
 ---
+
+<a name="license"></a>
 
 ### &#128196; License
 

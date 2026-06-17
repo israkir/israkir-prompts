@@ -2,11 +2,11 @@
 version: 1
 
 prompts:
-  - id: timestamp-data-source-audit
-    path: prompts/ux/timestamp-data-source-audit.md
-    title: Timestamp & Data-Source UX Consistency Audit
-    category: ux
-    tags: [timestamp, provenance, audit, ux, consistency, data-source]
+  - id: new-project-setup-makefile
+    path: prompts/dev/new-project-setup-makefile.md
+    title: New Project Setup — Makefile Conventions + Production Integration
+    category: dev
+    tags: [makefile, deployment, docker, local-dev, onboarding, monorepo, ghcr, ci]
 
   - id: restful-api-design-audit
     path: prompts/api/restful-api-design-audit.md
@@ -14,8 +14,8 @@ prompts:
     category: api
     tags: [rest, api, http, openapi, hypermedia, design, audit]
 
-  - id: new-project-setup-makefile
-    path: prompts/dev/new-project-setup-makefile.md
-    title: New Project Setup — Makefile Conventions + Production Integration
-    category: dev
-    tags: [makefile, deployment, docker, local-dev, onboarding, monorepo, ghcr, ci]
+  - id: timestamp-data-source-audit
+    path: prompts/ux/timestamp-data-source-audit.md
+    title: Timestamp & Data-Source UX Consistency Audit
+    category: ux
+    tags: [timestamp, provenance, audit, ux, consistency, data-source]
