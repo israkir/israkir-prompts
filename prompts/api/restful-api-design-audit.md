@@ -3,7 +3,7 @@ id: restful-api-design-audit
 title: RESTful API Design Audit & Implementation
 category: api
 tags: [rest, api, http, openapi, hypermedia, design, audit]
-version: 1.1.0
+version: 1.0.0
 ---
 
 # Prompt: RESTful API Design Audit & Implementation

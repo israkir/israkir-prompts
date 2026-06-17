@@ -13,3 +13,9 @@ prompts:
     title: RESTful API Design Audit & Implementation
     category: api
     tags: [rest, api, http, openapi, hypermedia, design, audit]
+
+  - id: new-project-setup-makefile
+    path: prompts/dev/new-project-setup-makefile.md
+    title: New Project Setup — Makefile Conventions + Production Integration
+    category: dev
+    tags: [makefile, deployment, docker, local-dev, onboarding, monorepo, ghcr, ci]
